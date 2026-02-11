@@ -1,41 +1,41 @@
 import streamlit as st
 import pandas as pd
+from datetime import datetime
 
-st.set_page_config(page_title="E-Commerce Price Intelligence", layout="wide")
+st.set_page_config(page_title="E-Commerce Price Dashboard", layout="wide")
 
-DATA_PATH = "data/cleaned_data.csv"
+st.title("📊 E-Commerce Price Monitoring Dashboard")
 
+# GitHub raw CSV URL
+DATA_URL = "https://raw.githubusercontent.com/krithic616/ecommerce-price-pipeline/main/data/cleaned_data.csv"
+
+# Load data
 @st.cache_data
 def load_data():
-    df = pd.read_csv(DATA_PATH)
-    df["extracted_at"] = pd.to_datetime(df["extracted_at"])
+    df = pd.read_csv(DATA_URL)
     return df
 
 df = load_data()
 
-st.title("📊 E-Commerce Price Intelligence Dashboard")
+# Convert extracted_at column to datetime
+df["extracted_at"] = pd.to_datetime(df["extracted_at"])
 
-# KPI Section
-col1, col2 = st.columns(2)
+# Last updated timestamp
+last_updated = df["extracted_at"].max()
 
-with col1:
-    st.metric("Total Records Tracked", len(df))
-
-with col2:
-    st.metric("Average Price", round(df["price"].mean(), 2))
+st.markdown(f"### 🕒 Last Updated: {last_updated.strftime('%d %b %Y - %I:%M %p')}")
 
 st.divider()
 
-# Trend Analysis
-st.subheader("Price Trend Over Time")
+# Metrics
+col1, col2, col3 = st.columns(3)
 
-trend_df = df.groupby("extracted_at")["price"].mean().reset_index()
-st.line_chart(trend_df.set_index("extracted_at"))
+col1.metric("Total Products", len(df))
+col2.metric("Average Price", f"${df['price'].mean():.2f}")
+col3.metric("Max Price", f"${df['price'].max():.2f}")
 
 st.divider()
 
-# Category Analysis
-st.subheader("Category-wise Average Price")
+st.subheader("Price Distribution")
 
-category_df = df.groupby("category")["price"].mean().reset_index()
-st.bar_chart(category_df.set_index("category"))
+st.bar_chart(df.groupby("category")["price"].mean())
