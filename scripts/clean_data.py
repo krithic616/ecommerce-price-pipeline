@@ -10,16 +10,13 @@ def clean_data():
 
     df = pd.read_csv(RAW_PATH)
 
-    # Keep only required columns
-    df = df[["id", "title", "price", "category", "extracted_at"]]
-
     # Remove duplicates
     df = df.drop_duplicates()
 
-    # Handle missing values
+    # Drop missing values
     df = df.dropna()
 
-    # Ensure correct data types
+    # Ensure numeric price
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
 
     return df
