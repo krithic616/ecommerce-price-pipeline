@@ -10,13 +10,9 @@ def clean_data():
 
     df = pd.read_csv(RAW_PATH)
 
-    # Remove duplicates
     df = df.drop_duplicates()
-
-    # Drop missing values
     df = df.dropna()
 
-    # Ensure numeric price
     df["price"] = pd.to_numeric(df["price"], errors="coerce")
 
     return df
