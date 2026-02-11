@@ -1,30 +1,27 @@
-import requests
 import pandas as pd
 from datetime import datetime
-import time
+import random
 
 def fetch_data():
-    url = "https://fakestoreapi.com/products"
+    products = [
+        {"product": "Laptop", "category": "electronics"},
+        {"product": "Gold Ring", "category": "jewelry"},
+        {"product": "T-Shirt", "category": "men's clothing"},
+        {"product": "Dress", "category": "women's clothing"},
+    ]
 
-    headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        "Accept": "application/json",
-        "Connection": "keep-alive"
-    }
+    data = []
 
-    # small delay to avoid bot detection
-    time.sleep(2)
-
-    response = requests.get(url, headers=headers, timeout=10)
-
-    if response.status_code != 200:
-        raise Exception(f"API request failed with status {response.status_code}")
-
-    data = response.json()
+    for item in products:
+        price = round(random.uniform(20, 500), 2)
+        data.append({
+            "product": item["product"],
+            "category": item["category"],
+            "price": price,
+            "extracted_at": datetime.now()
+        })
 
     df = pd.DataFrame(data)
-    df["extracted_at"] = datetime.now()
-
     return df
 
 
