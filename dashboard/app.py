@@ -4,7 +4,7 @@ from datetime import datetime
 
 st.set_page_config(page_title="E-Commerce Price Dashboard", layout="wide")
 
-st.title("📊 E-Commerce Price Monitoring Dashboard")
+st.title("E-Commerce Price Monitoring Dashboard")
 
 
 DATA_URL = "https://raw.githubusercontent.com/krithic616/ecommerce-price-pipeline/main/data/cleaned_data.csv"
